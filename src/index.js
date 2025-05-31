@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const passport = require('./middleware/passport');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,14 +20,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use(
   session({
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET || 'dev_secret',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false }, // Set to true if using HTTPS
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Middleware
 app.use(cors());
@@ -39,8 +36,8 @@ app.get('/', (req, res) => {
   res.send('Chore App Backend is running!');
 });
 
-// TODO: Add routes here
-app.use('/api/auth', require('./routes/auth'));
+// Local username/password auth routes
+app.use('/api/auth', require('./routes/authLocal'));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
