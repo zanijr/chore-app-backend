@@ -36,8 +36,14 @@ app.get('/', (req, res) => {
   res.send('Chore App Backend is running!');
 });
 
-// Local username/password auth routes
+ // Local username/password auth routes
 app.use('/api/auth', require('./routes/authLocal'));
+
+ // Chore management routes
+app.use('/api/chores', require('./routes/chores'));
+
+// User management routes
+app.use('/api/users', require('./routes/users'));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
